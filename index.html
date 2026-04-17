@@ -14,7 +14,10 @@
             <!-- SCREEN 1: DASHBOARD (HOME) -->
             <div id="homeScreen" class="screen active">
                 <div class="screen-header">
-                    <h1>Spending Limit Control</h1>
+                    <div>
+                        <h1>Spending Limit Control</h1>
+                        <p class="header-subtitle">Take control of your expenses</p>
+                    </div>
                     <i class="fa-regular fa-bell"></i>
                 </div>
 
@@ -125,25 +128,54 @@
                     </div>
 
                     <label class="form-label">Set Amount</label>
-                    <div class="amount-slider-container">
-                        <h2>₱ <span id="sliderAmount">10,000</span></h2>
-                        <input type="range" id="limitSlider" min="1000" max="50000" step="500" value="10000" oninput="updateSliderAmount(this.value)">
-                        <div class="slider-labels">
-                            <span>₱1,000</span>
-                            <span>₱50,000</span>
+                    <div class="amount-control">
+                        <button class="amount-minus" onclick="decrementAmount()">−</button>
+                        <div class="amount-display">
+                            <span>₱</span>
+                            <span id="sliderAmount">10,000</span>
                         </div>
+                        <button class="amount-plus" onclick="incrementAmount()">+</button>
+                    </div>
+                    <input type="range" id="limitSlider" min="1000" max="50000" step="500" value="10000" oninput="updateSliderAmount(this.value)">
+                    <div class="slider-labels">
+                        <span>₱1,000</span>
+                        <span>₱50,000</span>
                     </div>
 
                     <p class="note-text">This limit will reset every <strong>1st of the month</strong>.</p>
 
                     <label class="form-label">Apply Limit To (Optional)</label>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" checked> All Spending</label>
-                        <label><input type="checkbox"> Send Money</label>
-                        <label><input type="checkbox"> QR Payments</label>
-                        <label><input type="checkbox"> Online Purchases</label>
-                        <label><input type="checkbox"> Bills Payment</label>
-                        <label><input type="checkbox"> Load</label>
+                    <div class="checkbox-group" id="checkboxGroup">
+                        <label class="checkbox-item checked" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" checked hidden>
+                            <span class="checkmark"></span>
+                            <span>All Spending</span>
+                        </label>
+                        <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" hidden>
+                            <span class="checkmark"></span>
+                            <span>Send Money</span>
+                        </label>
+                        <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" hidden>
+                            <span class="checkmark"></span>
+                            <span>QR Payments</span>
+                        </label>
+                        <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" hidden>
+                            <span class="checkmark"></span>
+                            <span>Online Purchases</span>
+                        </label>
+                        <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" hidden>
+                            <span class="checkmark"></span>
+                            <span>Bills Payment</span>
+                        </label>
+                        <label class="checkbox-item" onclick="toggleCheckbox(this)">
+                            <input type="checkbox" hidden>
+                            <span class="checkmark"></span>
+                            <span>Load</span>
+                        </label>
                     </div>
 
                     <button class="save-btn" onclick="saveNewLimit()">Save Spending Limit</button>
@@ -202,7 +234,6 @@
                     <i class="fa-regular fa-calendar"></i>
                 </div>
 
-                <!-- Month Selector with Arrows -->
                 <div class="month-selector">
                     <button class="month-arrow" onclick="changeMonth(-1)">
                         <i class="fa-solid fa-chevron-left"></i>
