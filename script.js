@@ -54,7 +54,6 @@ function updateHistoryDisplay() {
     let data = monthData[monthKey];
     
     if (!data) {
-        // For future months or months with no data
         document.getElementById('historyTotalSpent').innerText = "0";
         document.getElementById('historyLimit').innerText = monthlyLimit;
         
@@ -102,13 +101,11 @@ function changeMonth(direction) {
         currentYear--;
     }
     
-    // Limit to 2024 and above
     if (currentYear < 2024) {
         currentYear = 2024;
         currentMonth = 0;
     }
     
-    // Don't go beyond current date (April 2025)
     if (currentYear > 2025) {
         currentYear = 2025;
         currentMonth = 3;
@@ -117,7 +114,6 @@ function changeMonth(direction) {
     updateHistoryDisplay();
 }
 
-// Screen Navigation
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -150,7 +146,6 @@ function showScreen(screenId) {
     }
 }
 
-// Update Dashboard
 function updateDashboard() {
     const remaining = monthlyLimit - totalSpent;
     const percentage = (totalSpent / monthlyLimit) * 100;
@@ -184,7 +179,6 @@ function updateDashboard() {
     }
 }
 
-// Edit Limit Functions
 function showEditLimit() {
     document.getElementById('sliderAmount').innerText = monthlyLimit;
     document.getElementById('limitSlider').value = monthlyLimit;
@@ -209,7 +203,6 @@ function selectPeriod(period) {
     event.target.classList.add('active');
 }
 
-// Warning and Limit Functions
 function checkAndShowLimitWarning() {
     const remaining = monthlyLimit - totalSpent;
     
@@ -236,7 +229,6 @@ function pauseLimit() {
     alert('Limit paused temporarily. You can continue spending without restrictions until you resume.');
 }
 
-// QR Scanner Functions
 async function startQRScanner() {
     showScreen('qrScreen');
     
@@ -265,7 +257,6 @@ function toggleTorch() {
     }
 }
 
-// Reset app (logout)
 function resetApp() {
     if (currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
@@ -276,10 +267,8 @@ function resetApp() {
     showScreen('homeScreen');
 }
 
-// Initialize
 updateDashboard();
 
-// Clean up camera when leaving QR screen
 const observer = new MutationObserver(() => {
     const qrScreen = document.getElementById('qrScreen');
     if (!qrScreen.classList.contains('active') && currentStream) {
