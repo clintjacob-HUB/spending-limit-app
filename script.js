@@ -4,6 +4,119 @@ let totalSpent = 7000;
 let currentStream = null;
 let torchOn = false;
 
+// Month selector variables
+let currentYear = 2025;
+let currentMonth = 3; // 0=Jan, 3=April
+
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+// Data for different months
+const monthData = {
+    "April 2025": { total: 7000, limit: 10000, transactions: [
+        { date: "Apr 02", desc: "Grocery Store", amount: 1200 },
+        { date: "Apr 02", desc: "Online Shop", amount: 800 },
+        { date: "Apr 02", desc: "Restaurant", amount: 950 },
+        { date: "Apr 02", desc: "Electric Bill", amount: 1500 }
+    ]},
+    "March 2025": { total: 8500, limit: 10000, transactions: [
+        { date: "Mar 05", desc: "Groceries", amount: 2500 },
+        { date: "Mar 10", desc: "Internet Bill", amount: 1500 },
+        { date: "Mar 15", desc: "Restaurant", amount: 1200 },
+        { date: "Mar 20", desc: "Shopping", amount: 2000 },
+        { date: "Mar 25", desc: "Pharmacy", amount: 1300 }
+    ]},
+    "February 2025": { total: 6200, limit: 10000, transactions: [
+        { date: "Feb 05", desc: "Groceries", amount: 2000 },
+        { date: "Feb 10", desc: "Electric Bill", amount: 1500 },
+        { date: "Feb 15", desc: "Dining", amount: 1200 },
+        { date: "Feb 20", desc: "Shopping", amount: 1500 }
+    ]},
+    "January 2025": { total: 9100, limit: 10000, transactions: [
+        { date: "Jan 05", desc: "Groceries", amount: 3000 },
+        { date: "Jan 10", desc: "Water Bill", amount: 800 },
+        { date: "Jan 15", desc: "Restaurant", amount: 1500 },
+        { date: "Jan 20", desc: "Shopping", amount: 2000 },
+        { date: "Jan 25", desc: "Pharmacy", amount: 1800 }
+    ]},
+    "December 2024": { total: 7800, limit: 10000, transactions: [
+        { date: "Dec 05", desc: "Christmas Groceries", amount: 3500 },
+        { date: "Dec 10", desc: "Gifts", amount: 2500 },
+        { date: "Dec 15", desc: "Restaurant", amount: 1800 }
+    ]}
+};
+
+function updateHistoryDisplay() {
+    const monthName = monthNames[currentMonth];
+    const monthKey = `${monthName} ${currentYear}`;
+    
+    document.getElementById('currentMonthYear').innerHTML = `${monthName} ${currentYear}`;
+    
+    let data = monthData[monthKey];
+    
+    if (!data) {
+        // For future months or months with no data
+        document.getElementById('historyTotalSpent').innerText = "0";
+        document.getElementById('historyLimit').innerText = monthlyLimit;
+        
+        const transactionList = document.getElementById('transactionList');
+        transactionList.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #8e8e93;">
+                <i class="fa-regular fa-calendar" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+                <p>No transactions for ${monthName} ${currentYear}</p>
+            </div>
+        `;
+        return;
+    }
+    
+    document.getElementById('historyTotalSpent').innerText = data.total.toLocaleString();
+    document.getElementById('historyLimit').innerText = data.limit.toLocaleString();
+    
+    const transactionList = document.getElementById('transactionList');
+    transactionList.innerHTML = '';
+    
+    let lastDate = '';
+    data.transactions.forEach(trans => {
+        if (trans.date !== lastDate) {
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'transaction-date';
+            dateDiv.innerText = trans.date;
+            transactionList.appendChild(dateDiv);
+            lastDate = trans.date;
+        }
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'transaction-item';
+        itemDiv.innerHTML = `<span>${trans.desc}</span><span>₱ ${trans.amount.toLocaleString()}</span>`;
+        transactionList.appendChild(itemDiv);
+    });
+}
+
+function changeMonth(direction) {
+    currentMonth += direction;
+    
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    } else if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+    
+    // Limit to 2024 and above
+    if (currentYear < 2024) {
+        currentYear = 2024;
+        currentMonth = 0;
+    }
+    
+    // Don't go beyond current date (April 2025)
+    if (currentYear > 2025) {
+        currentYear = 2025;
+        currentMonth = 3;
+    }
+    
+    updateHistoryDisplay();
+}
+
 // Screen Navigation
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
@@ -11,16 +124,6 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
     
-    // Update bottom nav active state
-    updateActiveNav(screenId);
-    
-    // Check if limit is reached
-    if (screenId === 'homeScreen') {
-        checkAndShowLimitWarning();
-    }
-}
-
-function updateActiveNav(screenId) {
     const navItems = document.querySelectorAll('.nav-item');
     const screenToNav = {
         'homeScreen': 0,
@@ -37,6 +140,14 @@ function updateActiveNav(screenId) {
             item.classList.remove('active');
         }
     });
+    
+    if (screenId === 'homeScreen') {
+        checkAndShowLimitWarning();
+    }
+    
+    if (screenId === 'historyScreen') {
+        updateHistoryDisplay();
+    }
 }
 
 // Update Dashboard
@@ -49,7 +160,6 @@ function updateDashboard() {
     document.getElementById('displayRemaining').innerText = remaining.toLocaleString();
     document.getElementById('homeProgressFill').style.width = `${Math.min(percentage, 100)}%`;
     
-    // Change colors based on limit status
     const limitCard = document.querySelector('.limit-card');
     const statusText = document.querySelector('.status-text');
     
@@ -113,12 +223,6 @@ function checkAndShowLimitWarning() {
     }
 }
 
-function showWarning() {
-    const remaining = monthlyLimit - totalSpent;
-    document.getElementById('warningRemaining').innerText = remaining;
-    document.getElementById('warningModal').classList.add('active');
-}
-
 function closeWarning() {
     document.getElementById('warningModal').classList.remove('active');
 }
@@ -172,17 +276,10 @@ function resetApp() {
     showScreen('homeScreen');
 }
 
-// Simulate adding expense (for testing)
-function addExpense(amount) {
-    totalSpent += amount;
-    updateDashboard();
-    checkAndShowLimitWarning();
-}
-
 // Initialize
 updateDashboard();
 
-// Handle camera cleanup when leaving QR screen
+// Clean up camera when leaving QR screen
 const observer = new MutationObserver(() => {
     const qrScreen = document.getElementById('qrScreen');
     if (!qrScreen.classList.contains('active') && currentStream) {
