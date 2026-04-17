@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>GCash - Spending Limit Control</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Content Area -->
+        <div class="screen-container" id="screenContainer">
+            <!-- SCREEN 1: DASHBOARD (HOME) -->
+            <div id="homeScreen" class="screen active">
+                <div class="screen-header">
+                    <h1>Spending Limit Control</h1>
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+
+                <!-- Main Limit Card -->
+                <div class="limit-card" id="limitCard">
+                    <div class="limit-status" id="limitStatus">
+                        <span class="status-text">Within Limit</span>
+                        <i class="fa-regular fa-circle-check"></i>
+                    </div>
+                    <div class="limit-amount">
+                        <span class="label">Monthly Limit</span>
+                        <h1>₱ <span id="displayLimit">10,000</span></h1>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="homeProgressFill" style="width: 70%"></div>
+                        </div>
+                        <div class="progress-numbers">
+                            <span>₱ <span id="displaySpent">7,000</span> spent</span>
+                            <span>₱ <span id="displayRemaining">3,000</span> remaining</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="card-btn" onclick="showEditLimit()">Edit Limit</button>
+                        <button class="card-btn" onclick="pauseLimit()">Pause Limit</button>
+                        <button class="card-btn" onclick="showScreen('historyScreen')">View History</button>
+                    </div>
+                </div>
+
+                <!-- Spending This Month Section -->
+                <div class="spending-section">
+                    <div class="section-header">
+                        <h3>Spending This Month</h3>
+                        <span>April 1 - April 30</span>
+                    </div>
+                    
+                    <div class="category-list">
+                        <div class="category-item">
+                            <div class="category-info">
+                                <i class="fa-solid fa-utensils"></i>
+                                <span>Food</span>
+                            </div>
+                            <div class="category-stats">
+                                <span class="amount">₱ 2,500</span>
+                                <span class="percentage">25%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill-small" style="width: 25%; background: #FF6B35;"></div>
+                        </div>
+
+                        <div class="category-item">
+                            <div class="category-info">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                <span>Shopping</span>
+                            </div>
+                            <div class="category-stats">
+                                <span class="amount">₱ 3,000</span>
+                                <span class="percentage">30%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill-small" style="width: 30%; background: #007AFF;"></div>
+                        </div>
+
+                        <div class="category-item">
+                            <div class="category-info">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span>Bills & Utilities</span>
+                            </div>
+                            <div class="category-stats">
+                                <span class="amount">₱ 1,500</span>
+                                <span class="percentage">15%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill-small" style="width: 15%; background: #34C759;"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="view-all-link" onclick="showScreen('historyScreen')">View All Transactions →</button>
+                </div>
+            </div>
+
+            <!-- SCREEN 2: SET/EDIT LIMIT -->
+            <div id="editLimitScreen" class="screen">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                    <h1>Set Spending Limit</h1>
+                    <div style="width: 30px;"></div>
+                </div>
+
+                <div class="form-card">
+                    <label class="form-label">Choose Period</label>
+                    <div class="period-tabs">
+                        <button class="period-tab" onclick="selectPeriod('day')">Day</button>
+                        <button class="period-tab" onclick="selectPeriod('week')">Week</button>
+                        <button class="period-tab active" onclick="selectPeriod('month')">Month</button>
+                    </div>
+
+                    <label class="form-label">Set Amount</label>
+                    <div class="amount-slider-container">
+                        <h2>₱ <span id="sliderAmount">10,000</span></h2>
+                        <input type="range" id="limitSlider" min="1000" max="50000" step="500" value="10000" oninput="updateSliderAmount(this.value)">
+                        <div class="slider-labels">
+                            <span>₱1,000</span>
+                            <span>₱50,000</span>
+                        </div>
+                    </div>
+
+                    <p class="note-text">This limit will reset every <strong>1st of the month</strong>.</p>
+
+                    <label class="form-label">Apply Limit To (Optional)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" checked> All Spending</label>
+                        <label><input type="checkbox"> Send Money</label>
+                        <label><input type="checkbox"> QR Payments</label>
+                        <label><input type="checkbox"> Online Purchases</label>
+                        <label><input type="checkbox"> Bills Payment</label>
+                        <label><input type="checkbox"> Load</label>
+                    </div>
+
+                    <button class="save-btn" onclick="saveNewLimit()">Save Spending Limit</button>
+                </div>
+            </div>
+
+            <!-- SCREEN 3: WARNING POPUP (Modal) -->
+            <div id="warningModal" class="modal">
+                <div class="modal-content warning-modal">
+                    <div class="warning-icon">⚠️</div>
+                    <h3>You're almost there!</h3>
+                    <p>You have ₱ <span id="warningRemaining">1,000</span> remaining for this month.</p>
+                    <div class="modal-buttons">
+                        <button class="modal-btn review" onclick="closeWarningAndReview()">Review Spending</button>
+                        <button class="modal-btn ignore" onclick="closeWarning()">Ignore</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 4: LIMIT REACHED (Full Screen) -->
+            <div id="limitReachedScreen" class="screen limit-reached">
+                <div class="screen-header white-text">
+                    <button class="back-btn white-btn" onclick="showScreen('homeScreen')">←</button>
+                    <h1>Limit Reached</h1>
+                    <div style="width: 30px;"></div>
+                </div>
+
+                <div class="limit-reached-content">
+                    <div class="alert-icon">⚠️</div>
+                    <h2>Spending Limit Reached</h2>
+                    <p>You've exceeded your ₱ <span id="exceedLimit">10,000</span> monthly limit.</p>
+
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="showEditLimit()">Increase Limit</button>
+                        <button class="action-btn secondary">Wait Until May 1</button>
+                        <p class="reset-note">Limit will reset on your next billing period</p>
+                    </div>
+
+                    <div class="usage-card-red">
+                        <h4>Current Usage</h4>
+                        <div class="usage-circle">100%</div>
+                        <div class="usage-stats-red">
+                            <div>₱ <span id="exceedSpent">10,500</span> Spent</div>
+                            <div>₱ 0 Remaining</div>
+                        </div>
+                        <button class="history-link" onclick="showScreen('historyScreen')">View History →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 5: SPENDING HISTORY -->
+            <div id="historyScreen" class="screen">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                    <h1>Spending History</h1>
+                    <i class="fa-regular fa-calendar"></i>
+                </div>
+
+                <div class="history-tabs">
+                    <button class="history-tab active">Day</button>
+                    <button class="history-tab">Week</button>
+                    <button class="history-tab">Month</button>
+                </div>
+
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <span>Total Spent</span>
+                        <h3>₱ 7,000</h3>
+                    </div>
+                    <div class="summary-card">
+                        <span>Limit</span>
+                        <h3>₱ 10,000</h3>
+                    </div>
+                </div>
+
+                <div class="transaction-list">
+                    <div class="transaction-date">Apr 02</div>
+                    <div class="transaction-item">
+                        <span>Grocery Store</span>
+                        <span>₱ 1,200</span>
+                    </div>
+                    <div class="transaction-date">Apr 05</div>
+                    <div class="transaction-item">
+                        <span>Online Shop</span>
+                        <span>₱ 800</span>
+                    </div>
+                    <div class="transaction-date">Apr 08</div>
+                    <div class="transaction-item">
+                        <span>Restaurant</span>
+                        <span>₱ 950</span>
+                    </div>
+                    <div class="transaction-date">Apr 10</div>
+                    <div class="transaction-item">
+                        <span>Electric Bill</span>
+                        <span>₱ 1,500</span>
+                    </div>
+                    <div class="transaction-date">Apr 12</div>
+                    <div class="transaction-item">
+                        <span>Pharmacy</span>
+                        <span>₱ 450</span>
+                    </div>
+                </div>
+
+                <button class="view-full-btn">View Full History</button>
+            </div>
+
+            <!-- SCREEN 6: INBOX -->
+            <div id="inboxScreen" class="screen">
+                <div class="screen-header">
+                    <h1>Inbox</h1>
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+                <div class="placeholder-content">
+                    <i class="fa-regular fa-inbox"></i>
+                    <p>No new notifications</p>
+                </div>
+            </div>
+
+            <!-- SCREEN 7: QR SCANNER -->
+            <div id="qrScreen" class="screen">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('homeScreen')">←</button>
+                    <h1>Scan QR Code</h1>
+                    <div style="width: 30px;"></div>
+                </div>
+                <div class="scanner-container">
+                    <div class="camera-preview" id="cameraPreview">
+                        <video id="camera" autoplay playsinline></video>
+                        <div class="scan-frame"></div>
+                    </div>
+                    <p class="scanner-text">Align QR code within the frame</p>
+                    <button class="torch-btn" onclick="toggleTorch()">🔦 Torch</button>
+                </div>
+            </div>
+
+            <!-- SCREEN 8: PROFILE -->
+            <div id="profileScreen" class="screen">
+                <div class="screen-header">
+                    <h1>Profile</h1>
+                    <i class="fa-regular fa-gear"></i>
+                </div>
+                <div class="profile-card">
+                    <div class="avatar">
+                        <i class="fa-regular fa-user"></i>
+                    </div>
+                    <h3>John Doe</h3>
+                    <p>+63 912 345 6789</p>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <span>Total Spent</span>
+                            <strong>₱ 10,500</strong>
+                        </div>
+                        <div class="profile-stat">
+                            <span>Monthly Limit</span>
+                            <strong>₱ 10,000</strong>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="resetApp()">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="showScreen('homeScreen')">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="showScreen('inboxScreen')">
+                <i class="fa-regular fa-envelope"></i>
+                <span>Inbox</span>
+            </div>
+            <div class="nav-item" onclick="startQRScanner()">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>QR</span>
+            </div>
+            <div class="nav-item" onclick="showScreen('historyScreen')">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Transactions</span>
+            </div>
+            <div class="nav-item" onclick="showScreen('profileScreen')">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
