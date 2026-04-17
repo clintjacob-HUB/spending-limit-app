@@ -51,6 +51,12 @@ body {
     color: white;
 }
 
+.header-subtitle {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
 .screen-header i {
     font-size: 20px;
     color: white;
@@ -321,6 +327,137 @@ body {
     margin: 0;
 }
 
+/* Amount Control with +/- - Centered */
+.amount-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: #f5f5f5;
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+}
+
+.amount-minus, .amount-plus {
+    width: 52px;
+    height: 52px;
+    border-radius: 26px;
+    background: white;
+    border: 1px solid #e5e5ea;
+    font-size: 28px;
+    font-weight: 600;
+    color: #007AFF;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.amount-minus:hover, .amount-plus:hover {
+    background: #007AFF10;
+    transform: scale(1.02);
+}
+
+.amount-display {
+    text-align: center;
+    min-width: 120px;
+}
+
+.amount-display span:first-child {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+}
+
+.amount-display span:last-child {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin-left: 4px;
+}
+
+/* Slider - Centered */
+input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+    accent-color: #007AFF;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #8e8e93;
+    margin-top: 8px;
+    padding: 0 4px;
+}
+
+/* Checkbox with Highlight - Multiple selections allowed */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #f5f5f5;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+}
+
+.checkbox-item.checked {
+    background: #007AFF10;
+    border-color: #007AFF;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: white;
+    border: 2px solid #c6c6c8;
+    display: inline-block;
+    position: relative;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.checkbox-item.checked .checkmark {
+    background: #007AFF;
+    border-color: #007AFF;
+}
+
+.checkbox-item.checked .checkmark::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox-item span:last-child {
+    font-size: 14px;
+    color: #000;
+    flex: 1;
+}
+
+.checkbox-item.checked span:last-child {
+    color: #007AFF;
+    font-weight: 500;
+}
+
 /* Form Styles */
 .form-card {
     background: white;
@@ -365,48 +502,11 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.amount-slider-container {
-    text-align: center;
-    margin-bottom: 16px;
-}
-
-.amount-slider-container h2 {
-    font-size: 32px;
-    margin-bottom: 16px;
-}
-
-.amount-slider-container input {
-    width: 100%;
-    accent-color: #007AFF;
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #8e8e93;
-    margin-top: 8px;
-}
-
 .note-text {
     font-size: 12px;
     color: #8e8e93;
     text-align: center;
     margin: 16px 0;
-}
-
-.checkbox-group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
 }
 
 .save-btn {
