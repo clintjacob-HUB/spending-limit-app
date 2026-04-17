@@ -395,6 +395,9 @@ input[type="range"] {
 }
 
 /* Checkbox with Highlight - Multiple selections allowed */
+/* Checkbox with Highlight - Better touch targets */
+/* Checkbox with Highlight - Fixed */
+/* Checkbox with Highlight - SIMPLE WORKING VERSION */
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -405,58 +408,72 @@ input[type="range"] {
 .checkbox-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
+    gap: 12px;
+    padding: 14px 16px;
     background: #f5f5f5;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     border: 1.5px solid transparent;
+    min-height: 52px;
+    position: relative;
 }
 
-.checkbox-item.checked {
-    background: #007AFF10;
-    border-color: #007AFF;
+/* Hide the actual checkbox */
+.checkbox-item input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
+/* Custom checkmark */
 .checkmark {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 6px;
     background: white;
     border: 2px solid #c6c6c8;
     display: inline-block;
     position: relative;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     flex-shrink: 0;
 }
 
-.checkbox-item.checked .checkmark {
+/* When checkbox is checked */
+.checkbox-item input:checked ~ .checkmark {
     background: #007AFF;
     border-color: #007AFF;
 }
 
-.checkbox-item.checked .checkmark::after {
+.checkbox-item input:checked ~ .checkmark::after {
     content: "✓";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
 }
 
-.checkbox-item span:last-child {
-    font-size: 14px;
-    color: #000;
-    flex: 1;
-}
-
-.checkbox-item.checked span:last-child {
+/* When checkbox is checked - highlight the whole item */
+.checkbox-item input:checked ~ span:last-child {
     color: #007AFF;
     font-weight: 500;
 }
+
+.checkbox-item:has(input:checked) {
+    background: #007AFF10;
+    border-color: #007AFF;
+}
+
+/* Touch feedback */
+.checkbox-item:active {
+    transform: scale(0.98);
+}
+/*------------------------------------------------------------------------
+
 
 /* Form Styles */
 .form-card {
