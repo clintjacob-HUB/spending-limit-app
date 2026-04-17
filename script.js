@@ -64,13 +64,41 @@ function decrementAmount() {
     }
 }
 
-// Toggle checkbox with highlight - allows multiple selections
+// Toggle checkbox with highlight - FIXED for mobile
 function toggleCheckbox(element) {
+    // Toggle the checked class on the clicked element
     element.classList.toggle('checked');
+    
+    // Find the hidden checkbox inside and toggle its checked property
     const checkbox = element.querySelector('input[type="checkbox"]');
     if (checkbox) {
         checkbox.checked = !checkbox.checked;
     }
+    
+    // Prevent event bubbling
+    if (event) {
+        event.stopPropagation();
+    }
+    return false;
+}
+
+// Initialize checkboxes
+function initCheckboxes() {
+    const checkboxes = document.querySelectorAll('.checkbox-item');
+    checkboxes.forEach(checkbox => {
+        // Remove existing listener to avoid duplicates
+        checkbox.removeEventListener('click', checkbox.clickHandler);
+        
+        // Create new handler
+        checkbox.clickHandler = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleCheckbox(this);
+        };
+        
+        // Add click listener
+        checkbox.addEventListener('click', checkbox.clickHandler);
+    });
 }
 
 function updateHistoryDisplay() {
@@ -171,6 +199,10 @@ function showScreen(screenId) {
     
     if (screenId === 'historyScreen') {
         updateHistoryDisplay();
+    }
+    
+    if (screenId === 'editLimitScreen') {
+        setTimeout(initCheckboxes, 50);
     }
 }
 
@@ -295,15 +327,18 @@ function resetApp() {
     showScreen('homeScreen');
 }
 
-// Initialize
-updateDashboard();
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    updateDashboard();
+    initCheckboxes();
+});
 
 // Clean up camera when leaving QR screen
-const observer = new MutationObserver(() => {
+const cameraObserver = new MutationObserver(() => {
     const qrScreen = document.getElementById('qrScreen');
     if (!qrScreen.classList.contains('active') && currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
         currentStream = null;
     }
 });
-observer.observe(document.getElementById('screenContainer'), { attributes: true, childList: true, subtree: true });
+cameraObserver.observe(document.getElementById('screenContainer'), { attributes: true, childList: true, subtree: true });
