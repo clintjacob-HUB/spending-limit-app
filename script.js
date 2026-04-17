@@ -6,7 +6,7 @@ let torchOn = false;
 
 // Month selector variables
 let currentYear = 2025;
-let currentMonth = 3; // 0=Jan, 3=April
+let currentMonth = 3;
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -44,6 +44,34 @@ const monthData = {
         { date: "Dec 15", desc: "Restaurant", amount: 1800 }
     ]}
 };
+
+// Amount increment/decrement
+function incrementAmount() {
+    let currentAmount = parseInt(document.getElementById('sliderAmount').innerText.replace(/,/g, ''));
+    let newAmount = currentAmount + 500;
+    if (newAmount <= 50000) {
+        document.getElementById('sliderAmount').innerText = newAmount.toLocaleString();
+        document.getElementById('limitSlider').value = newAmount;
+    }
+}
+
+function decrementAmount() {
+    let currentAmount = parseInt(document.getElementById('sliderAmount').innerText.replace(/,/g, ''));
+    let newAmount = currentAmount - 500;
+    if (newAmount >= 1000) {
+        document.getElementById('sliderAmount').innerText = newAmount.toLocaleString();
+        document.getElementById('limitSlider').value = newAmount;
+    }
+}
+
+// Toggle checkbox with highlight - allows multiple selections
+function toggleCheckbox(element) {
+    element.classList.toggle('checked');
+    const checkbox = element.querySelector('input[type="checkbox"]');
+    if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+    }
+}
 
 function updateHistoryDisplay() {
     const monthName = monthNames[currentMonth];
@@ -180,7 +208,7 @@ function updateDashboard() {
 }
 
 function showEditLimit() {
-    document.getElementById('sliderAmount').innerText = monthlyLimit;
+    document.getElementById('sliderAmount').innerText = monthlyLimit.toLocaleString();
     document.getElementById('limitSlider').value = monthlyLimit;
     showScreen('editLimitScreen');
 }
@@ -267,8 +295,10 @@ function resetApp() {
     showScreen('homeScreen');
 }
 
+// Initialize
 updateDashboard();
 
+// Clean up camera when leaving QR screen
 const observer = new MutationObserver(() => {
     const qrScreen = document.getElementById('qrScreen');
     if (!qrScreen.classList.contains('active') && currentStream) {
