@@ -38,9 +38,18 @@
                         </div>
                     </div>
                     <div class="card-buttons">
-                        <button class="card-btn" onclick="showEditLimit()">Edit Limit</button>
-                        <button class="card-btn" onclick="pauseLimit()">Pause Limit</button>
-                        <button class="card-btn" onclick="showScreen('historyScreen')">View History</button>
+                        <button class="card-btn" onclick="showEditLimit()">
+                            <i class="fa-solid fa-pen"></i>
+                            <span>Edit Limit</span>
+                        </button>
+                        <button class="card-btn" onclick="pauseLimit()">
+                            <i class="fa-solid fa-pause"></i>
+                            <span>Pause Limit</span>
+                        </button>
+                        <button class="card-btn" onclick="showScreen('historyScreen')">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <span>View History</span>
+                        </button>
                     </div>
                 </div>
 
@@ -193,6 +202,19 @@
                     <i class="fa-regular fa-calendar"></i>
                 </div>
 
+                <!-- Month Selector with Arrows -->
+                <div class="month-selector">
+                    <button class="month-arrow" onclick="changeMonth(-1)">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="current-month">
+                        <h3 id="currentMonthYear">April 2025</h3>
+                    </div>
+                    <button class="month-arrow" onclick="changeMonth(1)">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+
                 <div class="history-tabs">
                     <button class="history-tab active">Day</button>
                     <button class="history-tab">Week</button>
@@ -202,39 +224,31 @@
                 <div class="summary-cards">
                     <div class="summary-card">
                         <span>Total Spent</span>
-                        <h3>₱ 7,000</h3>
+                        <h3>₱ <span id="historyTotalSpent">7,000</span></h3>
                     </div>
                     <div class="summary-card">
                         <span>Limit</span>
-                        <h3>₱ 10,000</h3>
+                        <h3>₱ <span id="historyLimit">10,000</span></h3>
                     </div>
                 </div>
 
-                <div class="transaction-list">
+                <div class="transaction-list" id="transactionList">
                     <div class="transaction-date">Apr 02</div>
                     <div class="transaction-item">
                         <span>Grocery Store</span>
                         <span>₱ 1,200</span>
                     </div>
-                    <div class="transaction-date">Apr 05</div>
                     <div class="transaction-item">
                         <span>Online Shop</span>
                         <span>₱ 800</span>
                     </div>
-                    <div class="transaction-date">Apr 08</div>
                     <div class="transaction-item">
                         <span>Restaurant</span>
                         <span>₱ 950</span>
                     </div>
-                    <div class="transaction-date">Apr 10</div>
                     <div class="transaction-item">
                         <span>Electric Bill</span>
                         <span>₱ 1,500</span>
-                    </div>
-                    <div class="transaction-date">Apr 12</div>
-                    <div class="transaction-item">
-                        <span>Pharmacy</span>
-                        <span>₱ 450</span>
                     </div>
                 </div>
 
@@ -274,7 +288,10 @@
             <div id="profileScreen" class="screen">
                 <div class="screen-header">
                     <h1>Profile</h1>
-                    <i class="fa-regular fa-gear"></i>
+                    <div class="gcash-icon-header">
+                        <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                        <span>GCash</span>
+                    </div>
                 </div>
                 <div class="profile-card">
                     <div class="avatar">
@@ -307,7 +324,7 @@
                 <i class="fa-regular fa-envelope"></i>
                 <span>Inbox</span>
             </div>
-            <div class="nav-item" onclick="startQRScanner()">
+            <div class="nav-item qr-nav" onclick="startQRScanner()">
                 <i class="fa-solid fa-qrcode"></i>
                 <span>QR</span>
             </div>
